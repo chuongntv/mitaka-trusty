@@ -1,0 +1,62 @@
+  ######################################################
+############ Tambahkan 2 Harddisk (sdb & sdc) ##########
+  ######################################################
+
+
+########## Environment ##########
+
+### Repo & Packages ###
+dpkg --remove-architecture i386
+apt-get update
+apt-get install ubuntu-cloud-keyring
+apt-get update
+apt-get remove -y linux-generic-lts-wily linux-headers-generic-lts-wily linux-image-generic-lts-wily
+apt-get install -y linux-generic-lts-xenial linux-headers-generic-lts-xenial linux-image-generic-lts-xenial
+apt-get upgrade -y
+apt-get install -y ntp python-openstackclient
+
+### Hosts Maping ###
+sed -i '/127.0.1.1/d' /etc/hosts
+echo "10.2.2.10 controller" >> /etc/hosts
+echo "10.2.2.11 compute" >> /etc/hosts
+echo "10.2.2.12 block" >> /etc/hosts
+echo "10.2.2.13 object1" >> /etc/hosts
+echo "10.2.2.14 object2" >> /etc/hosts
+reboot
+
+
+  ################################################################
+############ Konfigurasi Dulu Cinder di Node Controller ##########
+  ################################################################
+
+########## Cinder ##########
+apt-get install -y lvm2
+pvcreate /dev/sdb
+vgcreate cinder-volumes /dev/sdb
+[ ! -f /etc/lvm/lvm.conf.orig ] && cp -v /etc/lvm/lvm.conf /etc/lvm/lvm.conf.orig
+curl -o /etc/lvm/lvm.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/lvm/lvm.conf
+apt-get install -y cinder-volume
+[ ! -f /etc/cinder/cinder.conf.orig ] && cp -v /etc/cinder/cinder.conf /etc/cinder/cinder.conf.orig
+curl -o /etc/cinder/cinder.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/cinder/cinder.conf
+service tgt restart
+service cinder-volume restart
+curl -o /root/admin-openrc.sh http://10.2.2.254/training/training-osa1/pod1/controller/root/admin-openrc.sh
+. /root/admin-openrc.sh
+cinder service-list
+
+  ################################################################
+############ Konfigurasi Dulu Manila di Node Controller ##########
+  ################################################################
+
+########## Manila ##########
+apt-get install -y manila-share python-pymysql
+[ ! -f /etc/manila/manila.conf.orig ] && cp -v /etc/manila/manila.conf /etc/manila/manila.conf.orig
+curl -o /etc/manila/manila.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/manila/manila.conf
+apt-get install lvm2 nfs-kernel-server
+pvcreate /dev/sdc
+vgcreate manila-volumes /dev/sdc
+service manila-share restart
+
+  ##########################################################
+############ Verifikasi Manila di Node Controller ##########
+  ##########################################################
