@@ -34,13 +34,13 @@ apt-get install -y lvm2
 pvcreate /dev/sdb
 vgcreate cinder-volumes /dev/sdb
 [ ! -f /etc/lvm/lvm.conf.orig ] && cp -v /etc/lvm/lvm.conf /etc/lvm/lvm.conf.orig
-curl -o /etc/lvm/lvm.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/lvm/lvm.conf
+cp -v etc/lvm/lvm.conf /etc/lvm/lvm.conf
 apt-get install -y cinder-volume
 [ ! -f /etc/cinder/cinder.conf.orig ] && cp -v /etc/cinder/cinder.conf /etc/cinder/cinder.conf.orig
-curl -o /etc/cinder/cinder.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/cinder/cinder.conf
+cp -v etc/cinder/cinder.conf /etc/cinder/cinder.conf
 service tgt restart
 service cinder-volume restart
-curl -o /root/admin-openrc.sh http://10.2.2.254/training/training-osa1/pod1/controller/root/admin-openrc.sh
+cp -v root/admin-openrc.sh /root/admin-openrc.sh
 . /root/admin-openrc.sh
 cinder service-list
 
@@ -51,7 +51,7 @@ cinder service-list
 ########## Manila ##########
 apt-get install -y manila-share python-pymysql
 [ ! -f /etc/manila/manila.conf.orig ] && cp -v /etc/manila/manila.conf /etc/manila/manila.conf.orig
-curl -o /etc/manila/manila.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/block/etc/manila/manila.conf
+cp -c etc/manila/manila.conf /etc/manila/manila.conf
 apt-get install lvm2 nfs-kernel-server
 pvcreate /dev/sdc
 vgcreate manila-volumes /dev/sdc

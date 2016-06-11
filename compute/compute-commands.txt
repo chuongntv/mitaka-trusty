@@ -27,9 +27,9 @@ reboot
 ########## Nova ##########
 apt-get install -y nova-compute nova-compute-qemu
 [ ! -f /etc/nova/nova.conf.orig ] && cp -v /etc/nova/nova.conf /etc/nova/nova.conf.orig
-curl -o /etc/nova/nova.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/compute/etc/nova/nova.conf
+cp -v etc/nova/nova.conf /etc/nova/nova.conf
 service nova-compute restart
-curl -o /root/admin-openrc http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/root/admin-openrc
+cp -v root/admin-openrc /root/admin-openrc
 . /root/admin-openrc
 openstack compute service list
 
@@ -41,9 +41,9 @@ openstack compute service list
 ########## Neutron ##########
 apt-get install -y neutron-linuxbridge-agent
 [ ! -f /etc/neutron/neutron.conf.orig ] && cp -v /etc/neutron/neutron.conf /etc/neutron/neutron.conf.orig
-curl -o /etc/neutron/neutron.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/compute/etc/neutron/neutron.conf
+cp -v etc/neutron/neutron.conf /etc/neutron/neutron.conf
 [ ! -f /etc/neutron/plugins/ml2/linuxbridge_agent.ini.orig ] && cp -v /etc/neutron/plugins/ml2/linuxbridge_agent.ini /etc/neutron/plugins/ml2/linuxbridge_agent.ini.orig
-curl -o /etc/neutron/plugins/ml2/linuxbridge_agent.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/compute/etc/neutron/plugins/ml2/linuxbridge_agent.ini
+cp -v etc/neutron/plugins/ml2/linuxbridge_agent.ini /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 service neutron-linuxbridge-agent restart
 . /root/admin-openrc
 neutron ext-list
@@ -57,5 +57,5 @@ neutron agent-list
 ########## Ceilometer ##########
 apt-get install -y ceilometer-agent-compute
 [ ! -f /etc/ceilometer/ceilometer.conf.orig ] && cp -v /etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.conf.orig
-curl -o /etc/ceilometer/ceilometer.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/compute/etc/ceilometer/ceilometer.conf
+cp -v etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.conf
 service ceilometer-agent-compute restart

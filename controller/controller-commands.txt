@@ -21,7 +21,7 @@ reboot
 
 ### MariaDB ###
 apt-get install -y mariadb-server python-pymysql
-curl -o /etc/mysql/conf.d/openstack.cnf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/mysql/conf.d/openstack.cnf
+cp -v etc/mysql/conf.d/openstack.cnf /etc/mysql/conf.d/openstack.cnf
 service mysql restart
 mysql -uroot -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('RAHASIA');"
 mysql -uroot -pRAHASIA -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
@@ -32,7 +32,7 @@ mysql -uroot -pRAHASIA -e "FLUSH PRIVILEGES;"
 ### MongoDB ###
 apt-get install -y mongodb-server mongodb-clients python-pymongo
 [ ! -f /etc/mongodb.conf.orig ] && cp -v /etc/mongodb.conf /etc/mongodb.conf.orig
-curl -o /etc/mongodb.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/mongodb.conf
+cp -v etc/mongodb.conf /etc/mongodb.conf
 service mongodb stop
 rm /var/lib/mongodb/journal/prealloc.*
 service mongodb start
@@ -45,7 +45,7 @@ rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 ### Memcached ###
 apt-get install -y memcached python-memcache
 [ ! -f /etc/memcached.conf.orig ] && cp -v /etc/memcached.conf /etc/memcached.conf.orig
-curl -o /etc/memcached.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/memcached.conf
+cp -v etc/memcached.conf /etc/memcached.conf
 service memcached restart
 
 
@@ -58,12 +58,12 @@ mysql -uroot -pRAHASIA -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' 
 echo "manual" > /etc/init/keystone.override
 apt-get install -y keystone apache2 libapache2-mod-wsgi
 [ ! -f /etc/keystone/keystone.conf.orig ] && cp -v /etc/keystone/keystone.conf /etc/keystone/keystone.conf.orig
-curl -o /etc/keystone/keystone.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/keystone/keystone.conf
+cp -v etc/keystone/keystone.conf /etc/keystone/keystone.conf
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 [ ! -f /etc/apache2/apache2.conf.orig ] && cp -v /etc/apache2/apache2.conf /etc/apache2/apache2.conf.orig
-curl -o /etc/apache2/apache2.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/apache2/apache2.conf
-curl -o /etc/apache2/sites-available/wsgi-keystone.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/apache2/sites-available/wsgi-keystone.conf
+cp -v etc/apache2/apache2.conf /etc/apache2/apache2.conf
+cp -v etc/apache2/sites-available/wsgi-keystone.conf etc/apache2/sites-available/wsgi-keystone.conf
 service apache2 restart
 rm -f /var/lib/keystone/keystone.db
 
@@ -85,7 +85,7 @@ openstack role add --project admin --user admin admin
 openstack project create --domain default --description "Service Project" service
 openstack role create user
 unset OS_TOKEN OS_URL
-curl -o /root/admin-openrc http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/root/admin-openrc
+cp -v root/admin-openrc /root/admin-openrc
 . /root/admin-openrc
 openstack token issue
 
@@ -103,9 +103,9 @@ openstack endpoint create --region RegionOne image internal http://controller:92
 openstack endpoint create --region RegionOne image admin http://controller:9292
 apt-get install -y glance
 [ ! -f /etc/glance/glance-api.conf.orig ] && cp -v /etc/glance/glance-api.conf /etc/glance/glance-api.conf.orig
-curl -o /etc/glance/glance-api.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/glance/glance-api.conf
+cp -v etc/glance/glance-api.conf /etc/glance/glance-api.conf
 [ ! -f /etc/glance/glance-registry.conf.orig ] && cp -v /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf.orig
-curl -o /etc/glance/glance-registry.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/glance/glance-registry.conf
+cp -v etc/glance/glance-registry.conf /etc/glance/glance-registry.conf
 su -s /bin/sh -c "glance-manage db_sync" glance
 service glance-registry restart
 service glance-api restart
@@ -131,7 +131,7 @@ openstack endpoint create --region RegionOne compute internal http://controller:
 openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1/%\(tenant_id\)s
 apt-get install -y nova-api nova-conductor nova-consoleauth nova-novncproxy nova-scheduler
 [ ! -f /etc/nova/nova.conf.orig ] && cp -v /etc/nova/nova.conf /etc/nova/nova.conf.orig
-curl -o /etc/nova/nova.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/nova/nova.conf
+cp -v etc/nova/nova.conf /etc/nova/nova.conf
 su -s /bin/sh -c "nova-manage api_db sync" nova
 su -s /bin/sh -c "nova-manage db sync" nova
 service nova-api restart
@@ -160,17 +160,17 @@ openstack endpoint create --region RegionOne network internal http://controller:
 openstack endpoint create --region RegionOne network admin http://controller:9696
 apt-get install -y neutron-server neutron-plugin-ml2 neutron-linuxbridge-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent
 [ ! -f /etc/neutron/neutron.conf.orig ] && cp -v /etc/neutron/neutron.conf /etc/neutron/neutron.conf.orig
-curl -o /etc/neutron/neutron.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/neutron.conf
+cp -v etc/neutron/neutron.conf /etc/neutron/neutron.conf
 [ ! -f /etc/neutron/plugins/ml2/ml2_conf.ini.orig ] && cp -v /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini.orig
-curl -o /etc/neutron/plugins/ml2/ml2_conf.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/plugins/ml2/ml2_conf.ini
+cp -v etc/neutron/plugins/ml2/ml2_conf.ini etc/neutron/plugins/ml2/ml2_conf.ini
 [ ! -f /etc/neutron/plugins/ml2/linuxbridge_agent.ini.orig ] && cp -v /etc/neutron/plugins/ml2/linuxbridge_agent.ini /etc/neutron/plugins/ml2/linuxbridge_agent.ini.orig
-curl -o /etc/neutron/plugins/ml2/linuxbridge_agent.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/plugins/ml2/linuxbridge_agent.ini
+cp -v etc/neutron/plugins/ml2/linuxbridge_agent.ini /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 [ ! -f /etc/neutron/l3_agent.ini.orig ] && cp -v /etc/neutron/l3_agent.ini /etc/neutron/l3_agent.ini.orig
-curl -o /etc/neutron/l3_agent.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/l3_agent.ini
+cp -v etc/neutron/l3_agent.ini /etc/neutron/l3_agent.ini
 [ ! -f /etc/neutron/dhcp_agent.ini.orig ] && cp -v /etc/neutron/dhcp_agent.ini /etc/neutron/dhcp_agent.ini.orig
-curl -o /etc/neutron/dhcp_agent.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/dhcp_agent.ini
+cp -v etc/neutron/dhcp_agent.ini /etc/neutron/dhcp_agent.ini
 [ ! -f /etc/neutron/metadata_agent.ini.orig ] && cp -v /etc/neutron/metadata_agent.ini /etc/neutron/metadata_agent.ini.orig
-curl -o /etc/neutron/metadata_agent.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/neutron/metadata_agent.ini
+cp -v etc/neutron/metadata_agent.ini /etc/neutron/metadata_agent.ini
 su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
 service nova-api restart
 service neutron-server restart
@@ -190,7 +190,7 @@ neutron agent-list
 ########## Horizon ##########
 apt-get install -y openstack-dashboard
 [ ! -f /etc/openstack-dashboard/local_settings.py.orig ] && cp -v /etc/openstack-dashboard/local_settings.py /etc/openstack-dashboard/local_settings.py.orig
-curl -o  /etc/openstack-dashboard/local_settings.py http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/openstack-dashboard/local_settings.py
+cp -v etc/openstack-dashboard/local_settings.py /etc/openstack-dashboard/local_settings.py
 service apache2 restart
 
 ###################################################################################
@@ -198,13 +198,11 @@ service apache2 restart
 ###################################################################################
 
 
-########## Launch Instance ##########
+########## Launch Instance Lewat Horizon ##########
 
 ### Menu Admin - System ###
 
-1. Cek images
-
-2. Membuat network public
+1. Membuat network public
 Name: net-public
 Project: admin
 Provider Network Type: Flat
@@ -213,58 +211,66 @@ Admin State: Up
 Shared: Yes
 External Network: Yes
 
-3. Membuat subnet public
+2. Membuat subnet public
 Subnet Name: subnet-public
 Network Address: 172.16.2.0/24
 IP Version: IPv4
-Gateway IP: 172.16.2.1
+Gateway IP: 172.16.2.254
 Enable DHCP: Yes
 Allocation Pools: 172.16.2.100,172.16.2.199
-DNS Name Servers: 172.16.2.1
-
+DNS Name Servers: 10.2.2.254
 
 ### Menu Project - Network ###
 
-4. Membuat network private
+3. Membuat network private
 Name: net-private
 Admin State: Up
 Shared: No
 Create Subnet: Yes
 
-5. Membuat subnet private
+4. Membuat subnet private
 Subnet Name: subnet-private
 Network Address: 192.168.2.0/24
 IP Version: IPv4
-Gateway IP: 192.168.2.1
+Gateway IP: 192.168.2.254
 Enable DHCP: Yes
 Allocation Pools: 192.168.2.100,192.168.2.199
-DNS Name Servers: 172.16.2.1
+DNS Name Servers: 10.2.2.254
 
-6. Membuat router
+5. Membuat router
 Router Name: router0
 Admin State: Up
 External Network: net-public
 Add interface
 Subnet: subnet-private
 
-
 ### Menu Project - Compute ###
 
-7. Launch Instance
+6. Unggah Image cirros
+Name: cirros
+Image Source: Image Location
+Image Location: http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+Format: QCOW2
+
+7. Create/Import Key Pair
+Key Pair Name: key-admin
+
+8. Launch Instance
 Instance Name: instance0
 Source Image: cirros
 Flavor: m1.tiny
 Network: net-private
+Key Pair: key-admin
+Akses console dan ping ke 172.16.2.254
 
-Akses console dan ping ke 172.16.2.1
+9. Floating IP
+Access & Security > Floating IPs > Allocate IP To Project > Allocate IP
+Instances > Associate Floating IP > Associate
 
-
-8. Floating IP
-
-9. Security Group (Allow SSH & ICMP)
-
-Ping dari host ke alamat IP Float instance0 (172.16.2.1XX)
-SSH dari host ke alamat IP Float instance0 (172.16.2.1XX)
+10. Security Group
+Allow SSH & ICMP
+Ping dari host ke alamat IP float instance0 (172.16.2.1XX)
+SSH dari host ke alamat IP float instance0 (172.16.2.1XX)
 
 
 ########## Heat ##########
@@ -290,7 +296,7 @@ openstack role add --project admin --user admin heat_stack_owner
 openstack role create heat_stack_user
 apt-get install -y heat-api heat-api-cfn heat-engine
 [ ! -f /etc/heat/heat.conf.orig ] && cp -v /etc/heat/heat.conf /etc/heat/heat.conf.orig
-curl -o /etc/heat/heat.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/heat/heat.conf
+cp -v etc/heat/heat.conf /etc/heat/heat.conf
 su -s /bin/sh -c "heat-manage db_sync" heat
 service heat-api restart
 service heat-api-cfn restart
@@ -298,7 +304,7 @@ service heat-engine restart
 . /root/admin-openrc
 openstack orchestration service list
 
-curl -o /root/admin-template.yml http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/root/admin-template.yml
+cp -v root/admin-template.yml /root/admin-template.yml
 openstack network list
 export NET_ID=$(openstack network list | awk '/ net-public / { print $2 }')
 openstack stack create -t admin-template.yml --parameter "NetID=$NET_ID" stack
@@ -319,7 +325,7 @@ openstack endpoint create --region RegionOne metering internal http://controller
 openstack endpoint create --region RegionOne metering admin http://controller:8777
 apt-get install -y ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification python-ceilometerclient
 [ ! -f /etc/ceilometer/ceilometer.conf.orig ] && cp -v /etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.conf.orig
-curl -o /etc/ceilometer/ceilometer.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/ceilometer/ceilometer.conf
+cp -v etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.conf
 service ceilometer-agent-central restart
 service ceilometer-agent-notification restart
 service ceilometer-api restart
@@ -345,9 +351,9 @@ openstack endpoint create --region RegionOne alarming internal http://controller
 openstack endpoint create --region RegionOne alarming admin http://controller:8042
 apt-get install -y aodh-api aodh-evaluator aodh-notifier aodh-listener aodh-expirer python-ceilometerclient
 [ ! -f /etc/aodh/aodh.conf.orig ] && cp -v /etc/aodh/aodh.conf /etc/aodh/aodh.conf.orig
-curl -o /etc/aodh/aodh.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/aodh/aodh.conf
+cp -v etc/aodh/aodh.conf /etc/aodh/aodh.conf
 [ ! -f /etc/aodh/api_paste.ini.orig ] && cp -v /etc/aodh/api_paste.ini /etc/aodh/api_paste.ini.orig
-curl -o /etc/aodh/api_paste.ini http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/aodh/api_paste.ini
+cp -v etc/aodh/api_paste.ini /etc/aodh/api_paste.ini
 service aodh-api restart
 service aodh-evaluator restart
 service aodh-notifier restart
@@ -375,7 +381,7 @@ openstack endpoint create --region RegionOne volumev2 internal http://controller
 openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(tenant_id\)s
 apt-get install -y cinder-api cinder-scheduler
 [ ! -f /etc/cinder/cinder.conf.orig ] && cp -v /etc/cinder/cinder.conf /etc/cinder/cinder.conf.orig
-curl -o /etc/cinder/cinder.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/cinder/cinder.conf
+cp -v etc/cinder/cinder.conf /etc/cinder/cinder.conf
 su -s /bin/sh -c "cinder-manage db sync" cinder
 service cinder-scheduler restart
 service cinder-api restart
@@ -404,7 +410,7 @@ openstack endpoint create --region RegionOne sharev2 internal http://controller:
 openstack endpoint create --region RegionOne sharev2 admin http://controller:8786/v2/%\(tenant_id\)s
 apt-get install -y manila-api manila-scheduler python-manilaclient
 [ ! -f /etc/manila/manila.conf.orig ] && cp -v /etc/manila/manila.conf /etc/manila/manila.conf.orig
-curl -o /etc/manila/manila.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/manila/manila.conf
+cp -v etc/manila/manila.conf /etc/manila/manila.conf
 su -s /bin/sh -c "manila-manage db sync" manila
 service manila-scheduler restart
 service manila-api restart
@@ -444,7 +450,7 @@ openstack endpoint create --region RegionOne object-store admin http://controlle
 apt-get install -y swift swift-proxy python-swiftclient python-keystoneclient python-keystonemiddleware memcached
 mkdir -p /etc/swift
 [ ! -f /etc/swift/proxy-server.conf.orig ] && cp -v /etc/swift/proxy-server.conf /etc/swift/proxy-server.conf.orig
-curl -o /etc/swift/proxy-server.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/controller/etc/swift/proxy-server.conf
+cp -v etc/swift/proxy-server.conf /etc/swift/proxy-server.conf
 
 ########################################################################
 ########## Lanjut Konfigurasi Swift di Node object1 & object2 ############
@@ -478,7 +484,7 @@ scp /etc/swift/*.gz 10.2.2.13:/etc/swift/
 
 scp /etc/swift/*.gz 10.2.2.14:/etc/swift/
 
-curl -o /etc/swift/swift.conf https://git.openstack.org/cgit/openstack/swift/plain/etc/swift.conf-sample?h=stable/mitaka
+cp -v etc/swift/swift.conf etc/swift/swift.conf
 
 scp /etc/swift/swift.conf 10.2.2.13:/etc/swift/swift.conf
 

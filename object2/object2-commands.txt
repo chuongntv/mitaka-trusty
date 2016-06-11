@@ -29,17 +29,17 @@ echo "/dev/sdb /srv/node/sdb xfs noatime,nodiratime,nobarrier,logbufs=8 0 2" >> 
 echo "/dev/sdc /srv/node/sdc xfs noatime,nodiratime,nobarrier,logbufs=8 0 2" >> /etc/fstab
 mount /srv/node/sdb
 mount /srv/node/sdc
-curl -o /etc/rsyncd.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/object2/etc/rsyncd.conf
+cp -v etc/rsyncd.conf etc/rsyncd.conf
 [ ! -f /etc/default/rsync.orig ] && cp -v /etc/default/rsync /etc/default/rsync.orig
-curl -o /etc/default/rsync http://192.168.1.20/training/trusty-mitaka/osa1/pod1/object2/etc/default/rsync
+cp -v etc/default/rsync /etc/default/rsync
 service rsync restart
 apt-get install -y swift swift-account swift-container swift-object
 [ ! -f /etc/swift/account-server.conf.orig ] && cp -v /etc/swift/account-server.conf /etc/swift/account-server.conf.orig
-curl -o /etc/swift/account-server.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/object2/etc/swift/account-server.conf
+cp -v etc/swift/account-server.conf /etc/swift/account-server.conf
 [ ! -f etc/swift/container-server.conf.orig ] && cp -v etc/swift/container-server.conf /etc/swift/container-server.conf.orig
-curl -o /etc/swift/container-server.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/object2/etc/swift/container-server.conf
+cp -v etc/swift/container-server.conf /etc/swift/container-server.conf
 [ ! -f /etc/swift/object-server.conf.orig ] && cp -v /etc/swift/object-server.conf /etc/swift/object-server.conf.orig
-curl -o /etc/swift/object-server.conf http://192.168.1.20/training/trusty-mitaka/osa1/pod1/object2/etc/swift/object-server.conf
+cp -v etc/swift/object-server.conf /etc/swift/object-server.conf
 chown -R swift:swift /srv/node
 mkdir -p /var/cache/swift
 chown -R root:swift /var/cache/swift
