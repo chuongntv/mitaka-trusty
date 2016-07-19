@@ -110,7 +110,7 @@ su -s /bin/sh -c "glance-manage db_sync" glance
 service glance-registry restart
 service glance-api restart
 . /root/admin-openrc
-wget -c http://192.168.1.20/distro/cirros/cirros-0.3.4-x86_64-disk.img
+wget -c http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
 openstack image create "cirros" --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --public
 openstack image list
 
@@ -421,20 +421,22 @@ service manila-api restart
 
 . /root/admin-openrc
 manila service-list
-wget -c http://192.168.1.20/distro/manila/manila-service-image-master.qcow2
+wget -c http://tarballs.openstack.org/manila-image-elements/images/manila-service-image-master.qcow2
 openstack image create "manila-service-image" --file manila-service-image-master.qcow2 --disk-format qcow2 --container-format bare --public
 openstack flavor create manila-service-flavor --id 100 --ram 256 --disk 0 --vcpus 1
 neutron net-list
 openstack server create --flavor manila-service-flavor --image manila-service-image --nic net-id=PRIVATE_NET_ID --security-group default manila
-openstack ip floating create SUBNET-PUBLIC
+openstack ip floating create net-public
 openstack ip floating add 172.16.2.XXX manila
 manila type-create default_share_type False
+manila type-list
 manila create NFS 1 --name share1
 manila list
 manila show share1
 manila access-allow share1 ip INSTANCE_FLOATING_IP_ADDRESS
 
----Akses Ke Instance manila---
+---Akses Ke Instance manila--- 
+##Login into the instance using manila as the username and password.
 mkdir ~/test_folder
 sudo mount -t nfs 10.2.2.12:/var/lib/manila/mnt/share-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ~/test_folder
 
