@@ -110,7 +110,7 @@ su -s /bin/sh -c "glance-manage db_sync" glance
 service glance-registry restart
 service glance-api restart
 . /root/admin-openrc
-wget -c http://192.168.1.20/distro/cirros/cirros-0.3.4-x86_64-disk.img
+wget -c http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
 openstack image create "cirros" --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --public
 openstack image list
 
@@ -421,7 +421,7 @@ service manila-api restart
 
 . /root/admin-openrc
 manila service-list
-wget -c http://192.168.1.20/distro/manila/manila-service-image-master.qcow2
+wget -c http://tarballs.openstack.org/manila-image-elements/images/manila-service-image-master.qcow2
 openstack image create "manila-service-image" --file manila-service-image-master.qcow2 --disk-format qcow2 --container-format bare --public
 openstack flavor create manila-service-flavor --id 100 --ram 256 --disk 0 --vcpus 1
 neutron net-list
