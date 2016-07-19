@@ -435,7 +435,7 @@ manila list
 manila show share1
 manila access-allow share1 ip INSTANCE_FLOATING_IP_ADDRESS
 
----Akses Ke Instance manila via Console--- 
+---Akses Ke Instance manila--- 
 ##Login into the instance using manila as the username and password.
 mkdir ~/test_folder
 sudo mount -t nfs 10.2.2.12:/var/lib/manila/mnt/share-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ~/test_folder
