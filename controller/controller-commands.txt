@@ -490,7 +490,7 @@ scp /etc/swift/*.gz 10.2.2.13:/etc/swift/
 
 scp /etc/swift/*.gz 10.2.2.14:/etc/swift/
 
-cp -v etc/swift/swift.conf etc/swift/swift.conf
+curl -o /etc/swift/swift.conf https://git.openstack.org/cgit/openstack/swift/plain/etc/swift.conf-sample?h=stable/mitaka
 
 scp /etc/swift/swift.conf 10.2.2.13:/etc/swift/swift.conf
 
