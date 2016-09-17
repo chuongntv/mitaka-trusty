@@ -12,6 +12,9 @@ apt-get install ubuntu-cloud-keyring
 apt-get update
 apt-get remove -y linux-generic-lts-wily linux-headers-generic-lts-wily linux-image-generic-lts-wily
 apt-get install -y linux-generic-lts-xenial linux-headers-generic-lts-xenial linux-image-generic-lts-xenial
+apt-get install software-properties-common
+add-apt-repository cloud-archive:mitaka
+apt-get update
 apt-get upgrade -y
 apt-get install -y ntp python-openstackclient
 
