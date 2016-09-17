@@ -32,7 +32,7 @@ echo "/dev/sdb /srv/node/sdb xfs noatime,nodiratime,nobarrier,logbufs=8 0 2" >> 
 echo "/dev/sdc /srv/node/sdc xfs noatime,nodiratime,nobarrier,logbufs=8 0 2" >> /etc/fstab
 mount /srv/node/sdb
 mount /srv/node/sdc
-cp -v etc/rsyncd.conf /etc/swift/swift.conf
+cp -v etc/rsyncd.conf /etc/rsyncd.conf
 [ ! -f /etc/default/rsync.orig ] && cp -v /etc/default/rsync /etc/default/rsync.orig
 cp -v etc/default/rsync /etc/default/rsync
 service rsync restart
