@@ -66,6 +66,7 @@ keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 [ ! -f /etc/apache2/apache2.conf.orig ] && cp -v /etc/apache2/apache2.conf /etc/apache2/apache2.conf.orig
 cp -v etc/apache2/apache2.conf /etc/apache2/apache2.conf
 cp -v etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-available/wsgi-keystone.conf
+a2ensite wsgi-keystone
 service apache2 restart
 rm -f /var/lib/keystone/keystone.db
 
