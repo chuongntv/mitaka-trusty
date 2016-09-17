@@ -198,7 +198,7 @@ cp -v etc/openstack-dashboard/local_settings.py /etc/openstack-dashboard/local_s
 service apache2 restart
 
 ###################################################################################
-########## Akses Horizon dengan Web Browser: http://192.168.1.200/horizon/ ############
+########## Akses Horizon dengan Web Browser: http://10.2.2.10/horizon/ ############
 ###################################################################################
 
 
