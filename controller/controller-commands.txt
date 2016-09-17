@@ -311,7 +311,7 @@ openstack orchestration service list
 cp -v root/admin-template.yml /root/admin-template.yml
 openstack network list
 export NET_ID=$(openstack network list | awk '/ net-public / { print $2 }')
-openstack stack create -t admin-template.yml --parameter "NetID=$NET_ID" stack
+openstack stack create -t /root/admin-template.yml --parameter "NetID=$NET_ID" stack
 openstack stack list
 openstack stack output show --all stack
 openstack server list
